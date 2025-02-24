@@ -211,11 +211,13 @@
         <div class="custom-slider">
             {% for sneaker in sneakers %}
             <div class="custom-slide">
-                <img src="{{ sneaker.image.url }}" alt="Slide {{ forloop.counter }}">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">{{ sneaker.name }}</div>
-                    <div class="custom-price">${{ sneaker.price }}</div>
-                </div>
+                <a href="{% url 'shoe_detail' sneaker.pk %}">
+                    <img src="{{ sneaker.image.url }}" alt="Slide {{ forloop.counter }}">
+                    <div class="custom-title-custom-price">
+                        <div class="custom-title">{{ sneaker.name }}</div>
+                        <div class="custom-price">${{ sneaker.price }}</div>
+                    </div>
+                </a>
             </div>
             {% endfor %}
         </div>
