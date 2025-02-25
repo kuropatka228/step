@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView
 from .models import *
+
 
 def index(request):
     top_sneaker_categories = TopSneakerCategory.objects.all()
@@ -8,13 +9,14 @@ def index(request):
 
 def product(request):
     sneakers = Sneaker.objects.all()
-    return render(request, 'product.html', {'sneakers': sneakers})
+    collections = SneakerCollection.objects.all()
+    return render(request, 'product.html', {'sneakers': sneakers, **{'collections': collections}})
 
 def shoe_detail(request, pk):
     models_dict = {
-       'sneaker': Sneaker,
+      'sneaker': Sneaker,
         'top_sneaker': TopSneaker,
-       'shoes': Shoes,
+      'shoes': Shoes,
     }
 
     shoe = None
@@ -28,4 +30,10 @@ def shoe_detail(request, pk):
     if shoe is None:
         return render(request, '404.html', status=404)
 
-    return render(request,'shoe_detail.html', {'shoe': shoe})
+    if isinstance(shoe, Sneaker):
+        sneaker = shoe
+    else:
+        sneaker = None
+
+    return render(request,'shoe_detail.html', {'sneaker': sneaker,'shoe': shoe})
+

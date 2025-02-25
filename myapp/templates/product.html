@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -157,6 +157,7 @@
     align-items: flex-end;
     gap: 150px;
     padding-left: 20px;
+    justify-content: center
 }
 .custom-progress-bar-and-slider{
     display: flex;
@@ -170,6 +171,27 @@
     margin-top: 40px;
 }
 
+
+
+        .custom-slide {
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-slide:hover {
+  transform: translateY(-2px);
+}
+
+.custom-slide a {
+  text-decoration: none;
+  color: #333;
+  transition: color 0.2s ease-in-out;
+}
+
+.custom-slide:hover a {
+  color: #FFB22C;
+}
+
+
     </style>
 </head>
 <body>
@@ -181,7 +203,7 @@
             <div class="title">DISCOVER NOW</div>
             <div class="subtitle">PRODUCTS</div>
         </div>
-        <p class="description">Dive into the world of fashion excellence at Klothink. Our curated selection brings
+        <p class="description">Dive into the world of fashion excellence at StepUp. Our curated selection brings
             together
             the latest trends and timeless classics, offering you a diverse array of clothing items that resonate with
             your
@@ -204,201 +226,57 @@
 </div>
 
 <div class="collection">
-    <h3>Formal Elegance</h3>
-    <p class="description">Explore timeless elegance with our Formal Elegance collection, featuring refined pieces for a polished look.</p>
-
-    <div class="custom-slider-container">
-        <div class="custom-slider">
-            {% for sneaker in sneakers %}
-            <div class="custom-slide">
-                <a href="{% url 'shoe_detail' sneaker.pk %}">
-                    <img src="{{ sneaker.image.url }}" alt="Slide {{ forloop.counter }}">
-                    <div class="custom-title-custom-price">
-                        <div class="custom-title">{{ sneaker.name }}</div>
-                        <div class="custom-price">${{ sneaker.price }}</div>
-                    </div>
-                </a>
-            </div>
-            {% endfor %}
-        </div>
-        <div class="custom-progress-bar-and-slider">
-            <div class="custom-progress-bar">
-                <div class="custom-progress"></div>
-            </div>
-
-            <div class="custom-slider-controls">
-                <button class="custom-slider-button" id="custom-prev">&#10094;</button>
-                <button class="custom-slider-button" id="custom-next">&#10095;</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-<div class="collection">
-    <h3>Active Lifestyle</h3>
-    <p class="description">Embrace an active lifestyle with our performance-driven men's wear, designed for comfort and flexibility.</p>
-
-    <div class="custom-slider-container">
-        <div class="custom-slider">
-            <div class="custom-slide"><img src="{% static 'images/shoes.png' %}" alt="Slide 1">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 1</div>
-                    <div class="custom-price">$69.99</div>
+    {% for collection in collections %}
+        <h3>{{ collection.title }}</h3>
+        <p class="description">{{ collection.description }}</p>
+        <div class="custom-slider-container">
+            <div class="custom-slider">
+                {% for sneaker in collection.sneakers.all %}
+                <div class="custom-slide">
+                    <a href="{% url 'shoe_detail' sneaker.pk %}">
+                        <img src="{{ sneaker.image.url }}" alt="Slide {{ forloop.counter }}">
+                        <div class="custom-title-custom-price">
+                            <div class="custom-title">{{ sneaker.name }}</div>
+                            <div class="custom-price">${{ sneaker.price }}</div>
+                        </div>
+                    </a>
                 </div>
+                {% endfor %}
             </div>
-            <div class="custom-slide"><img src="{% static 'images/shoes2.png' %}" alt="Slide 2">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 2</div>
-                    <div class="custom-price">$69.99</div>
+            <div class="custom-progress-bar-and-slider">
+                <div class="custom-progress-bar">
+                    <div class="custom-progress"></div>
                 </div>
-            </div>
-            <div class="custom-slide"><img src="{% static 'images/shoes3.png' %}" alt="Slide 3">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 3</div>
-                    <div class="custom-price">$69.99</div>
-                </div>
-            </div>
-            <div class="custom-slide"><img src="{% static 'images/shoes.png' %}" alt="Slide 4">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 4</div>
-                    <div class="custom-price">$69.99</div>
-                </div>
-            </div>
-            <div class="custom-slide"><img src="{% static 'images/shoes2.png' %}" alt="Slide 5">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 5</div>
-                    <div class="custom-price">$69.99</div>
-                </div>
-            </div>
-            <div class="custom-slide"><img src="{% static 'images/shoes3.png' %}" alt="Slide 6">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 6</div>
-                    <div class="custom-price">$69.99</div>
-                </div>
-            </div>
-            <div class="custom-slide"><img src="{% static 'images/shoes.png' %}" alt="Slide 7">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 7</div>
-                    <div class="custom-price">$69.99</div>
-                </div>
-            </div>
-            <div class="custom-slide"><img src="{% static 'images/shoes2.png' %}" alt="Slide 8">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 8</div>
-                    <div class="custom-price">$69.99</div>
+
+                <div class="custom-slider-controls">
+                    <button class="custom-slider-button" id="custom-prev">&#10094;</button>
+                    <button class="custom-slider-button" id="custom-next">&#10095;</button>
                 </div>
             </div>
         </div>
-        <div class="custom-progress-bar-and-slider">
-            <div class="custom-progress-bar">
-                <div class="custom-progress"></div>
-            </div>
-
-            <div class="custom-slider-controls">
-                <button class="custom-slider-button" id="custom-prev">&#10094;</button>
-                <button class="custom-slider-button" id="custom-next">&#10095;</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-<div class="collection">
-    <h3>Casual Collection</h3>
-    <p class="description">Discover our versatile men's casual wear collection, where comfort meets contemporary
-        fashion.</p>
-
-    <div class="custom-slider-container">
-        <div class="custom-slider">
-            <div class="custom-slide"><img src="{% static 'images/shoes.png' %}" alt="Slide 1">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 1</div>
-                    <div class="custom-price">$69.99</div>
-                </div>
-            </div>
-            <div class="custom-slide"><img src="{% static 'images/shoes2.png' %}" alt="Slide 2">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 2</div>
-                    <div class="custom-price">$69.99</div>
-                </div>
-            </div>
-            <div class="custom-slide"><img src="{% static 'images/shoes3.png' %}" alt="Slide 3">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 3</div>
-                    <div class="custom-price">$69.99</div>
-                </div>
-            </div>
-            <div class="custom-slide"><img src="{% static 'images/shoes.png' %}" alt="Slide 4">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 4</div>
-                    <div class="custom-price">$69.99</div>
-                </div>
-            </div>
-            <div class="custom-slide"><img src="{% static 'images/shoes2.png' %}" alt="Slide 5">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 5</div>
-                    <div class="custom-price">$69.99</div>
-                </div>
-            </div>
-            <div class="custom-slide"><img src="{% static 'images/shoes3.png' %}" alt="Slide 6">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 6</div>
-                    <div class="custom-price">$69.99</div>
-                </div>
-            </div>
-            <div class="custom-slide"><img src="{% static 'images/shoes.png' %}" alt="Slide 7">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 7</div>
-                    <div class="custom-price">$69.99</div>
-                </div>
-            </div>
-            <div class="custom-slide"><img src="{% static 'images/shoes2.png' %}" alt="Slide 8">
-                <div class="custom-title-custom-price">
-                    <div class="custom-title">Sneaker 8</div>
-                    <div class="custom-price">$69.99</div>
-                </div>
-            </div>
-        </div>
-        <div class="custom-progress-bar-and-slider">
-            <div class="custom-progress-bar">
-                <div class="custom-progress"></div>
-            </div>
-
-            <div class="custom-slider-controls">
-                <button class="custom-slider-button" id="custom-prev">&#10094;</button>
-                <button class="custom-slider-button" id="custom-next">&#10095;</button>
-            </div>
-        </div>
-    </div>
+    {% endfor %}
 </div>
 
 <footer class="footer">
-  <div class="footer-container">
-    <div class="footer-info">
-      <p>&copy; 2025 Все права защищены</p>
-      <p>Создано с любовью и заботой</p>
+    <div class="footer-container">
+        <div class="footer-info">
+            <p>&copy; 2025 Все права защищены</p>
+            <p>Создано с любовью и заботой</p>
+        </div>
+        <div class="footer-links">
+            <ul>
+                <li><a href="#">О нас</a></li>
+                <li><a href="#">Контакты</a></li>
+                <li><a href="#">Помощь</a></li>
+            </ul>
+        </div>
+        <div class="footer-logo">
+            <img src="{% static 'images/logo.png' %}" alt="Логотип сайта" class="logo">
+            <span>Step Up</span>
+        </div>
     </div>
-    <div class="footer-links">
-      <ul>
-        <li><a href="#">О нас</a></li>
-        <li><a href="#">Контакты</a></li>
-        <li><a href="#">Помощь</a></li>
-      </ul>
-    </div>
-    <div class="footer-logo">
-      <img src="{% static 'images/logo.png' %}" alt="Логотип сайта" class="logo">
-      <span>Step Up</span>
-    </div>
-  </div>
 </footer>
 
-<script src="{% static 'script.js' %}"></script>
+<script src="{% static 'product.js' %}"></script>
 </body>
 </html>

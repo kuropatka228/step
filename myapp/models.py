@@ -31,6 +31,18 @@ class Sneaker(BaseShoe):
     def get_absolute_url(self):
         return reverse('sneaker_detail', args=[str(self.id)])
 
+class SneakerSize(models.Model):
+    sneaker = models.ForeignKey(Sneaker, on_delete=models.CASCADE, related_name='sizes')
+    size = models.CharField(max_length=10)
+
+class SneakerCollection(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    sneakers = models.ManyToManyField(Sneaker)
+
+    def __str__(self):
+        return self.title
+
 class Shoes(BaseShoe):
     name = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -42,40 +54,6 @@ class Shoes(BaseShoe):
 
     def get_absolute_url(self):
         return reverse('shoe_detail', args=[str(self.id)])
-
-
-class Category(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-
-    def __str__(self):
-        return self.name
-
-class Product(models.Model):
-    name = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=10, decimal_places=1)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
-    image = models.ImageField(upload_to='products/')
-
-    def __str__(self):
-        return self.name
-
-class Review(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    text = models.TextField()
-    rating = models.IntegerField()
-
-    def __str__(self):
-        return f'{self.product.name} - {self.text}'
-
-class Order(models.Model):
-    customer_name = models.CharField(max_length=255)
-    customer_email = models.EmailField()
-    products = models.ManyToManyField(Product)
-    total_price = models.DecimalField(max_digits=10, decimal_places=1)
-
-    def __str__(self):
-        return f'Order {self.id} - {self.customer_name}'
 
 
 class TopSneakerCategory(models.Model):

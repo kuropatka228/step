@@ -9,6 +9,14 @@ body{
   width: 0;
 }
 
+a {
+  color: inherit;
+  text-decoration: inherit;
+   padding: 0;
+   margin: 0;
+  }
+
+
 .header-container {
     display: flex;
     justify-content: space-between;
