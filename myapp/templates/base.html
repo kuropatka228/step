@@ -68,17 +68,19 @@
     </ul>
     <div class="tab-content">
         {% for category in top_sneaker_categories %}
-        <div class="tab-pane" data-pane= {{ category.name }}
+        <div class="tab-pane" data-pane="{{ category.name }}"
              style="display: {% if forloop.counter == 1 %}block{% else %}none{% endif %};">
             <ul>
-                {% for sneaker in category.top_sneakers.all %}
-                <li data-category="{{ category.name }}">
-                    <img src="{{ sneaker.image.url }}" alt="Обувь">
-                    <div class="tab-info">
-                        <p>{{ sneaker.name }}</p>
-                        <p>{{ sneaker.price }}$</p>
-                    </div>
-                </li>
+                {% for sneaker in category.sneakers.all %}
+                    <li data-category="{{ category.name }}">
+                        <a href="{% url 'sneaker_detail' sneaker.id %}">
+                            <img src="{{ sneaker.image.url }}" alt="Обувь">
+                            <div class="tab-info">
+                                <p>{{ sneaker.name }}</p>
+                                <p> {{ sneaker.price }}$</p>
+                            </div>
+                        </a>
+                    </li>
                 {% endfor %}
             </ul>
         </div>

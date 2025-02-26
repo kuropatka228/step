@@ -1,10 +1,8 @@
 from django.contrib import admin
 from.models import *
 
-
-admin.site.register(Shoes)
-admin.site.register(TopSneaker)
 admin.site.register(TopSneakerCategory)
+admin.site.register(Cart)
 
 class SneakerCollectionAdmin(admin.ModelAdmin):
     list_display = ('title', 'description')

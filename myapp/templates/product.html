@@ -36,7 +36,6 @@
         }
         .features {
             display: flex;
-
             gap: 20px;
             margin-top: 20px;
             flex-wrap: wrap;
@@ -89,8 +88,8 @@
         }
 
         .custom-slide {
-            flex: 0 0 calc(100% / 4); /* Равномерное распределение 4 слайдов */
-            margin: 0; /* Убираем лишние отступы */
+            flex: 0 0 calc(100% / 4);
+            margin: 0;
             transition: 0.5s;
             display: flex;
             flex-direction: column;
@@ -146,7 +145,7 @@
 }
 
 .custom-progress {
-    width: 0%; /* Начинается с нуля */
+    width: 0%;
     height: 100%;
     background-color: #000;
     transition: width 0.5s ease-in-out;
@@ -232,15 +231,15 @@
         <div class="custom-slider-container">
             <div class="custom-slider">
                 {% for sneaker in collection.sneakers.all %}
-                <div class="custom-slide">
-                    <a href="{% url 'shoe_detail' sneaker.pk %}">
-                        <img src="{{ sneaker.image.url }}" alt="Slide {{ forloop.counter }}">
-                        <div class="custom-title-custom-price">
-                            <div class="custom-title">{{ sneaker.name }}</div>
-                            <div class="custom-price">${{ sneaker.price }}</div>
-                        </div>
-                    </a>
-                </div>
+                    <div class="custom-slide">
+                        <a href="{% url 'sneaker_detail' sneaker.pk %}">
+                            <img src="{{ sneaker.image.url }}" alt="Slide {{ forloop.counter }}">
+                            <div class="custom-title-custom-price">
+                                <div class="custom-title">{{ sneaker.name }}</div>
+                                <div class="custom-price">${{ sneaker.price }}</div>
+                            </div>
+                        </a>
+                    </div>
                 {% endfor %}
             </div>
             <div class="custom-progress-bar-and-slider">

@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,7 +12,6 @@
 </head>
 
 <style>
-
 
 </style>
 
@@ -30,7 +28,8 @@
             <h1 class="detail-title">{{ shoe.name }}</h1>
             <div class="detail-buttons">
                 <button class="detail-buy-now"><img src="{% static 'images/shop.png' %}">Buy Now</button>
-                <button class="detail-add-to-cart"><img src="{% static 'images/black-basket.png' %}">Add To cart
+                <button class="detail-add-to-cart" onclick="location.href='{% url 'add_to_cart' 'Sneaker' shoe.id %}'">
+                    <img src="{% static 'images/black-basket.png' %}">Add To cart
                 </button>
             </div>
         </div>
@@ -41,9 +40,9 @@
                 <span>Sizes:</span>
                 <div class="detail-size-options">
                     <form id="size-form">
-                        {% for size in sneaker.sizes.all %}
-                        <input type="radio" id="size-{{ size.id }}" name="size" value="{{ size.id }}">
-                        <label for="size-{{ size.id }}">{{ size.size }}</label>
+                        {% for size in shoe.sizes.all %}
+                            <input type="radio" id="size-{{ size.id }}" name="size" value="{{ size.id }}">
+                            <label for="size-{{ size.id }}">{{ size.size }}</label>
                         {% endfor %}
                     </form>
                 </div>

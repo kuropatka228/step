@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина</title>
+    <link rel="stylesheet" href="{% static 'cart.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Itim&family=Manrope:wght@200..800&family=Roboto+Slab:wght@100..900&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+
+{% include 'header.html' %}
+
+<div class="container-cart">
+    <div class="cart-header">
+        <h1>Cart</h1>
+    </div>
+    <div class=""></div>
+    {% if cart %}
+        <ul class="cart-list">
+            {% for item in cart %}
+                <li class="cart-item">
+                    {{ item.model_name }} ({{ item.model_type }}) x {{ item.quantity }} = ${{ item.model_price }} x {{ item.quantity }} = ${{ item.total_price }}
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="cart-summary">
+            <p>Итого: {{ cart|length }} товаров</p>
+            <p>Общая стоимость: ${{ total_price }}</p>
+        </div>
+    {% else %}
+        <div class="empty-cart">
+            <p>Ваша корзина пуста</p>
+            <a href="{% url 'product' %}" class="product-button">Перейти к товарам</a>
+        </div>
+    {% endif %}
+</div>
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-info">
+            <p>&copy; 2025 Все права защищены</p>
+            <p>Создано с любовью и заботой</p>
+        </div>
+        <div class="footer-links">
+            <ul>
+                <li><a href="#">О нас</a></li>
+                <li><a href="#">Контакты</a></li>
+                <li><a href="#">Помощь</a></li>
+            </ul>
+        </div>
+        <div class="footer-logo">
+            <img src="{% static 'images/logo.png' %}" alt="Логотип сайта" class="logo">
+            <span>Step Up</span>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
