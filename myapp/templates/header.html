@@ -15,7 +15,7 @@
         <a href="{% url 'product' %}" class="product-button">Product</a>
         <img src="{% static 'images/logo.png' %}" alt="Логотип сайта" class="logo">
         <button class="cart-button">
-            <img src="{% static 'images/basket.png' %}">
+            <a href="{% url 'cart' %}"> <img src="{% static 'images/basket.png' %}"></a>
         </button>
         <a href="{% url 'product' %}" class="product-button">Contact Support</a>
     </div>

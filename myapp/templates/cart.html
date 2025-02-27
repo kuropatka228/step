@@ -17,26 +17,47 @@
 
 <div class="container-cart">
     <div class="cart-header">
-        <h1>Cart</h1>
+        <h1>CART</h1>
     </div>
-    <div class=""></div>
-    {% if cart %}
+    <div class="cart-info">
+        {% if cart %}
         <ul class="cart-list">
             {% for item in cart %}
-                <li class="cart-item">
-                    {{ item.model_name }} ({{ item.model_type }}) x {{ item.quantity }} = ${{ item.model_price }} x {{ item.quantity }} = ${{ item.total_price }}
-                </li>
+            <li class="cart-item">
+                <div class="cart-item-nototal">
+                    <img src="{{ item.sneaker.image.url }}" alt="Картинка">
+                    <div class="info">
+                        {{ item.sneaker.name }} <br> <b> ${{ item.sneaker.price }}</b>
+                    </div>
+                    <div class="quantity">
+                        <button class="decrease" data-item-id="{{ item.id }}">-</button>
+                        <input type="number" value="{{ item.quantity }}" readonly>
+                        <button class="increase" data-item-id="{{ item.id }}">+</button>
+                    </div>
+
+                </div>
+                <div class="total">
+                    <b>${{ item.total_price }}</b>
+                </div>
+            </li>
             {% endfor %}
         </ul>
+
         <div class="cart-summary">
-            <p>Итого: {{ cart|length }} товаров</p>
-            <p>Общая стоимость: ${{ total_price }}</p>
+            <h1>Order amount</h1>
+            <div class="cart-sum">
+                <p>Итого: {{ cart|length }} товаров</p>
+                <p>Общая стоимость: ${{ total_price }}</p>
+            </div>
+            <a href="#" class="checkout-button">Оформить заказ</a>
         </div>
+    </div>
     {% else %}
-        <div class="empty-cart">
-            <p>Ваша корзина пуста</p>
-            <a href="{% url 'product' %}" class="product-button">Перейти к товарам</a>
-        </div>
+
+    <div class="empty-cart">
+        <p>Your cart is empty</p>
+        <a href="{% url 'product' %}" class="product-button-empty">Go to products</a>
+    </div>
     {% endif %}
 </div>
 
@@ -60,5 +81,66 @@
     </div>
 </footer>
 
+
+<script>
+
+const decreaseButtons = document.querySelectorAll('.decrease');
+const increaseButtons = document.querySelectorAll('.increase');
+
+decreaseButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const input = button.nextElementSibling;
+        let quantity = parseInt(input.value);
+        if (quantity > 1) {
+            quantity -= 1;
+            input.value = quantity;
+            updateQuantity(button.dataset.itemId, quantity);
+        }
+    });
+});
+
+increaseButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const input = button.previousElementSibling;
+        let quantity = parseInt(input.value);
+        quantity += 1;
+        input.value = quantity;
+        updateQuantity(button.dataset.itemId, quantity);
+    });
+});
+
+function updateQuantity(itemId, quantity) {
+    fetch('/update-quantity/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')  // Исправлено: правильное получение CSRF токена
+        },
+        body: JSON.stringify({ item_id: itemId, quantity: quantity })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Количество обновлено');
+            document.querySelector(`button[data-item-id="${itemId}"]`)
+                .closest('.cart-item')
+                .querySelector('.total b')
+                .textContent = `$${data.new_total_price}`;  // Обновляем цену в корзине
+        } else {
+            console.log('Ошибка:', data.error);
+        }
+    })
+    .catch(error => console.log('Ошибка:', error));
+}
+
+
+function getCookie(name) {
+    let value = "; " + document.cookie;
+    let parts = value.split("; " + name + "=");
+    if (parts.length === 2) return parts.pop().split(";").shift();
+}
+
+
+</script>
 </body>
 </html>

@@ -1,8 +1,11 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect
 from django.views import generic
 from.models import *
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+import json
 
 
 def index(request):
@@ -30,21 +33,12 @@ def shoe_detail(request, pk):
 @login_required
 def add_to_cart(request, model_type, model_id):
     user = request.user
-    try:
-        model = Sneaker.objects.get(id=model_id)
-    except Sneaker.DoesNotExist:
-        messages.error(request, 'Product does not exist')
-        return redirect('index')
-
-    try:
-        cart = Cart.objects.get(user=user, model_type=model_type, model_id=model_id)
+    sneaker = Sneaker.objects.get(id=model_id)
+    cart, created = Cart.objects.get_or_create(user=user, sneaker=sneaker)
+    if not created:
         cart.quantity += 1
-        cart.model_price = model.price
-        cart.total_price = cart.model_price * cart.quantity
-    except Cart.DoesNotExist:
-        cart = Cart.objects.create(user=user, model_type=model_type, model_id=model_id, model_name=model.name, model_price=model.price, quantity=1, total_price=model.price)
-
-    cart.save()
+        cart.total_price = cart.quantity * sneaker.price
+        cart.save()
     return redirect('cart')
 
 @login_required
@@ -54,3 +48,39 @@ def cart(request):
     for item in cart:
         total_price += item.total_price
     return render(request, 'cart.html', {'cart': cart, 'total_price': total_price})
+
+
+@csrf_exempt
+@require_POST
+@login_required
+def update_quantity(request):
+    try:
+        data = json.loads(request.body)  # JSON вместо request.POST
+        item_id = data.get('item_id')
+        quantity = int(data.get('quantity'))
+
+        cart_item = Cart.objects.get(id=item_id, user=request.user)  # Проверка пользователя
+        cart_item.quantity = quantity
+        cart_item.save()
+
+        return JsonResponse({'success': True, 'new_total_price': cart_item.total_price})
+
+    except Cart.DoesNotExist:
+        return JsonResponse({'error': 'Товар не найден в корзине'})
+    except Exception as e:
+        return JsonResponse({'error': str(e)})
+
+
+def add_to_cart(request, model_type, model_id):
+    user = request.user
+    sneaker = Sneaker.objects.get(id=model_id)
+    try:
+        cart_item = Cart.objects.get(user=user, sneaker=sneaker)
+        cart_item.quantity += 1
+        cart_item.save()
+    except Cart.DoesNotExist:
+        Cart.objects.create(user=user, sneaker=sneaker, quantity=1)
+    return redirect('cart')
+
+
+
