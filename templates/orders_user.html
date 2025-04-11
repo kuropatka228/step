@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="user-orders">
+    <div class="container">
+        <h1 class="orders-title">Мои заказы</h1>
+
+        {% if orders %}
+        <div class="orders-grid">
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-header">
+                    <span class="order-number">Заказ #{{ order.id }}</span>
+                    <span class="order-date">{{ order.created|date:"d.m.Y H:i" }}</span>
+                </div>
+
+                <div class="order-products">
+                    {% for item in order.items.all %}
+                    <div class="product-item">
+                        <div class="product-name">{{ item.shoe.name }}</div>
+                        <div class="product-quantity">×{{ item.quantity }}</div>
+                        <div class="product-price">{{ item.get_cost }} руб.</div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="order-footer">
+                    <div class="order-total">
+                        <span>Итого:</span>
+                        <span class="total-price">{{ order.get_total_cost }} руб.</span>
+                    </div>
+                    <div class="order-status {{ order.status }}">
+                        {{ order.get_status_display }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-orders">
+            <div class="empty-icon">
+                <i class="fas fa-box-open"></i>
+            </div>
+            <p class="empty-text">У вас пока нет заказов</p>
+            <a href="{% url 'product_list' %}" class="btn primary-btn">Перейти в каталог</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+/* Основные стили для sticky footer */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Используем viewport height */
+}
+
+main {
+    flex: 1; /* Это заставляет основной контент занимать все доступное пространство */
+}
+</style>
+
+<style>
+.user-orders {
+    padding: 30px 0;
+    min-height: 60vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.orders-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #333;
+    text-align: center;
+}
+
+.orders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.order-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.order-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eee;
+}
+
+.order-number {
+    font-weight: 600;
+    color: #333;
+}
+
+.order-date {
+    color: #666;
+    font-size: 14px;
+}
+
+.order-products {
+    padding: 15px 20px;
+}
+
+.product-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed #f0f0f0;
+}
+
+.product-item:last-child {
+    border-bottom: none;
+}
+
+.product-name {
+    flex: 2;
+    color: #333;
+}
+
+.product-quantity {
+    flex: 1;
+    text-align: center;
+    color: #666;
+}
+
+.product-price {
+    flex: 1;
+    text-align: right;
+    font-weight: 500;
+}
+
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #fafafa;
+    border-top: 1px solid #eee;
+}
+
+.order-total {
+    font-weight: 600;
+}
+
+.total-price {
+    margin-left: 10px;
+    color: #ff6b00;
+    font-size: 18px;
+}
+
+.order-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.order-status.new {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.order-status.processing {
+    background-color: #fff8e1;
+    color: #ff8f00;
+}
+
+.order-status.completed {
+    background-color: #e8f5e9;
+    color: #388e3c;
+}
+
+.order-status.cancelled {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.no-orders {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.empty-icon {
+    font-size: 60px;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.empty-text {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.primary-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #ff6b00;
+    color: white;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.primary-btn:hover {
+    background-color: #e65100;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .orders-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .order-header {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+</style>
+{% endblock %}

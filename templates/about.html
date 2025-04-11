@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .about-hero {
+        padding: 60px 0;
+        background-color: #f7f7f7;
+        text-align: center;
+    }
+
+    .about-hero h1 {
+        font-size: 2.8em;
+        font-weight: bold;
+    }
+
+    .about-content {
+        padding: 50px 0;
+    }
+
+    .about-text {
+        max-width: 800px;
+        margin: 0 auto 40px;
+        text-align: center;
+    }
+
+    .about-text h2 {
+        font-size: 2em;
+        margin-bottom: 15px;
+    }
+
+    .about-text p {
+        font-size: 1.1em;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .about-stats {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin-bottom: 60px;
+    }
+
+    .stat-item {
+        background-color: #fafafa;
+        padding: 20px 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        text-align: center;
+        min-width: 180px;
+    }
+
+    .stat-item h3 {
+        font-size: 2em;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .stat-item p {
+        font-size: 1em;
+        color: #777;
+    }
+
+    .about-values {
+        text-align: center;
+    }
+
+    .about-values h2 {
+        font-size: 2em;
+        margin-bottom: 30px;
+    }
+
+    .values-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 25px;
+    }
+
+    .value {
+        background-color: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        width: 240px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .value i {
+        font-size: 2em;
+        color: #FFA500;
+        margin-bottom: 15px;
+    }
+
+    .value h3 {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+        word-break: break-word;
+    }
+
+    .value p {
+        font-size: 0.95em;
+        color: #666;
+    }
+
+    .team {
+        background-color: #f9f9f9;
+        padding: 60px 0;
+        text-align: center;
+    }
+
+    .team h2 {
+        font-size: 2em;
+        margin-bottom: 40px;
+    }
+
+    .team-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+    }
+
+    .team-member .member-photo {
+    display: none; /* скрываем фото */
+}
+
+    .team-member {
+        background-color: #fff;
+        padding: 20px;
+        width: 220px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .member-photo {
+        width: 100%;
+        height: 200px;
+        background-color: #ddd;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .team-member h3 {
+        font-size: 1.2em;
+        margin-bottom: 5px;
+    }
+
+    .team-member p {
+        color: #666;
+        font-size: 0.95em;
+    }
+</style>
+
+<section class="about-hero">
+    <div class="container">
+        <h1>О компании StepUp</h1>
+    </div>
+</section>
+
+<section class="about-content">
+    <div class="container">
+        <div class="about-text">
+            <h2>Наша история</h2>
+            <p>StepUp начал свою деятельность в 2018 году с небольшого магазина в центре Москвы. Сегодня мы — один из ведущих интернет-магазинов обуви в России, предлагающий широкий ассортимент качественной продукции от проверенных производителей.</p>
+            <p>Наша миссия — обеспечить каждого клиента удобной, стильной и качественной обувью по доступным ценам. Мы тщательно отбираем поставщиков, и каждый товар в нашем каталоге проходит многоэтапную проверку качества.</p>
+        </div>
+
+        <div class="about-stats">
+            <div class="stat-item">
+                <h3>6+</h3>
+                <p>Лет на рынке</p>
+            </div>
+            <div class="stat-item">
+                <h3>12,500+</h3>
+                <p>Довольных клиентов</p>
+            </div>
+            <div class="stat-item">
+                <h3>320+</h3>
+                <p>Моделей в каталоге</p>
+            </div>
+            <div class="stat-item">
+                <h3>8,700+</h3>
+                <p>Положительных отзывов</p>
+            </div>
+        </div>
+
+        <div class="about-values">
+            <h2>Наши ценности</h2>
+            <div class="values-grid">
+                <div class="value">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Качество</h3>
+                    <p>Мы гарантируем высокое качество всей нашей продукции</p>
+                </div>
+                <div class="value">
+                    <i class="fas fa-heart"></i>
+                    <h3>Клиентоориентированность</h3>
+                    <p>Удовлетворенность клиентов — наш главный приоритет</p>
+                </div>
+                <div class="value">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Инновации</h3>
+                    <p>Мы постоянно ищем новые решения для вашего комфорта</p>
+                </div>
+                <div class="value">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <h3>Ответственность</h3>
+                    <p>Мы ответственно подходим к каждому этапу нашей работы</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="team">
+    <div class="container">
+        <h2>Наша команда</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <h3>Иван Петров</h3>
+                <p>Основатель и CEO</p>
+            </div>
+            <div class="team-member">
+                <h3>Анна Смирнова</h3>
+                <p>Директор по маркетингу</p>
+            </div>
+            <div class="team-member">
+                <h3>Дмитрий Иванов</h3>
+                <p>Главный закупщик</p>
+            </div>
+            <div class="team-member">
+                <h3>Елена Козлова</h3>
+                <p>Менеджер по работе с клиентами</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

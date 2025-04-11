@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+/* Основные стили для sticky footer */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Используем viewport height */
+}
+
+main {
+    flex: 1; /* Это заставляет основной контент занимать все доступное пространство */
+}
+</style>
+<section class="product-detail">
+    <div class="container">
+        <div class="product-detail-content">
+            <div class="product-images">
+                <div class="main-image">
+                    <img src="{{ shoe.image.url }}" alt="{{ shoe.name }}" loading="lazy">
+                </div>
+            </div>
+            
+            <div class="product-info">
+                <h1>{{ shoe.name }}</h1>
+                <div class="product-meta">
+                    <span class="category">{{ shoe.category }}</span>
+                    <span class="gender">{{ shoe.get_gender_display }}</span>
+                </div>
+                
+                <div class="price">{{ shoe.price }} руб.</div>
+                
+                <div class="availability">
+                    {% if shoe.available %}
+                    <span class="in-stock"><i class="fas fa-check"></i> В наличии</span>
+                    {% else %}
+                    <span class="out-of-stock"><i class="fas fa-times"></i> Нет в наличии</span>
+                    {% endif %}
+                </div>
+                
+                <div class="actions">
+                    <a href="{% url 'cart_add' shoe.id %}" class="btn primary">Добавить в корзину</a>
+                </div>
+                
+                <div class="description">
+                    <h3>Описание</h3>
+                    <p>{{ shoe.description }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="product-reviews">
+            <h2>Отзывы</h2>
+
+            {% if request.user.is_authenticated %}
+                {% if not user_review_exists %}
+                    <button class="btn toggle-review-form" onclick="toggleReviewForm()">
+                        Оставить отзыв
+                    </button>
+
+                    <div id="review-form" class="review-form" style="display: none;">
+                        <form method="post" action="{% url 'product_detail' id=shoe.id slug=shoe.slug %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="submit_review" value="1">
+
+                            <div class="form-group">
+                                <label>Оценка (1-5):</label>
+                                <input type="number" name="rating" min="1" max="5" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Текст отзыва:</label>
+                                <textarea name="text" rows="4" required></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn primary">Отправить</button>
+                                <button type="button" class="btn" onclick="toggleReviewForm()">Отмена</button>
+                            </div>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="alert info">Вы уже оставляли отзыв на этот товар</div>
+                {% endif %}
+            {% else %}
+                <p>Чтобы оставить отзыв, пожалуйста <a href="{% url 'login' %}">войдите</a> в аккаунт.</p>
+            {% endif %}
+
+            <div class="reviews-list">
+                {% for review in reviews %}
+                <div class="review">
+                    <div class="review-header">
+                        <strong>{{ review.author }}</strong>
+                        <div class="rating">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= review.rating %}
+                                    ★
+                                {% else %}
+                                    ☆
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span>{{ review.created|date:"d.m.Y" }}</span>
+                    </div>
+                    <p class="review-text">{{ review.text }}</p>
+                </div>
+                {% empty %}
+                <p>Пока нет отзывов. Будьте первым!</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="related-products">
+            <h2>Похожие товары</h2>
+            <div class="products-grid">
+                {% for shoe in related_shoes %}
+                <div class="product-card">
+                    <a href="{% url 'product_detail' shoe.id shoe.slug %}">
+                        <div class="product-image">
+                            <img src="{{ shoe.image.url }}" alt="{{ shoe.name }}" loading="lazy">
+                        </div>
+                        <h3>{{ shoe.name }}</h3>
+                        <p class="price">{{ shoe.price }} руб.</p>
+                    </a>
+                    <a href="{% url 'cart_add' shoe.id %}" class="btn">В корзину</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function toggleReviewForm() {
+    const form = document.getElementById('review-form');
+    const button = document.querySelector('.toggle-review-form');
+
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+        if (button) button.style.display = 'none';
+    } else {
+        form.style.display = 'none';
+        if (button) button.style.display = 'block';
+    }
+}
+</script>
+{% endblock %}

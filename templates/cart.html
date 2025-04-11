@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+/* Основные стили для sticky footer */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Используем viewport height */
+}
+
+main {
+    flex: 1; /* Это заставляет основной контент занимать все доступное пространство */
+}
+</style>
+
+<section class="cart" style="margin-top: 40px; margin-bottom: 40px;">
+    <div class="container">
+        {% if empty %}
+        <div class="empty-cart">
+            <h1>Ваша корзина пуста</h1>
+            <p>Вернитесь в каталог, чтобы добавить товары</p>
+            <a href="{% url 'product_list' %}" class="btn primary">Перейти в каталог</a>
+        </div>
+        {% else %}
+        <h1>Ваша корзина</h1>
+        
+        <div class="cart-content">
+            <div class="cart-items">
+                {% for item in cart_items %}
+                <div class="cart-item">
+                    <div class="item-image">
+                        <img src="{{ item.shoe.image.url }}" alt="{{ item.shoe.name }}">
+                    </div>
+                    <div class="item-info">
+                        <h3>{{ item.shoe.name }}</h3>
+                        <p class="price">{{ item.shoe.price }} руб. x {{ item.quantity }}</p>
+                        <p class="total">Итого: {{ item.get_total_price }} руб.</p>
+                    </div>
+                    <div class="item-actions">
+                        <a href="{% url 'cart_remove' item.shoe.id %}" class="remove"><i class="fas fa-times"></i></a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="cart-summary">
+                <h2>Итого</h2>
+                <div class="summary-row">
+                    <span>Товары ({{ cart_items_count }})</span>
+                    <span>{{ cart_total }} руб.</span>
+                </div>
+                <div class="summary-row">
+                    <span>Доставка</span>
+                    <span>Бесплатно</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Общая сумма</span>
+                    <span>{{ cart_total }} руб.</span>
+                </div>
+                <a href="{% url 'order_create' %}" class="btn primary">Оформить заказ</a>
+                <a href="{% url 'product_list' %}" class="btn">Продолжить покупки</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

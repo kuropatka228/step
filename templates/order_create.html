@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="order-container" style="margin-top: 40px; margin-bottom: 40px;">
+    <h1 class="order-title">Оформление заказа</h1>
+    <form method="post" class="order-form">
+        {% csrf_token %}
+
+        <div class="form-section">
+            <h3 class="section-title">Контактная информация</h3>
+            <div class="form-row">
+                <div class="form-field">
+                    {{ form.first_name.label_tag }}
+                    {{ form.first_name }}
+                </div>
+                <div class="form-field">
+                    {{ form.last_name.label_tag }}
+                    {{ form.last_name }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-field">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                </div>
+                <div class="form-field">
+                    {{ form.phone.label_tag }}
+                    {{ form.phone }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="section-title">Адрес доставки</h3>
+            <div class="form-field">
+                {{ form.address.label_tag }}
+                {{ form.address }}
+            </div>
+            <div class="form-row">
+                <div class="form-field">
+                    {{ form.postal_code.label_tag }}
+                    {{ form.postal_code }}
+                </div>
+                <div class="form-field">
+                    {{ form.city.label_tag }}
+                    {{ form.city }}
+                </div>
+            </div>
+        </div>
+
+<div class="form-section">
+    <h3 class="section-title">Способ оплаты</h3>
+    <div class="form-field">
+        <label for="{{ form.payment_method.id_for_label }}">Выберите способ оплаты:</label>
+        <select name="{{ form.payment_method.name }}" id="{{ form.payment_method.id_for_label }}" class="payment-select">
+            <option value="card" {% if form.payment_method.value == 'card' %}selected{% endif %}>Картой онлайн</option>
+            <option value="courier_card" {% if form.payment_method.value == 'courier_card' %}selected{% endif %}>Картой курьеру</option>
+            <option value="cash" {% if form.payment_method.value == 'cash' %}selected{% endif %}>Наличными курьеру</option>
+        </select>
+    </div>
+</div>
+
+<style>
+.payment-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.payment-select:focus {
+    border-color: #ffa500;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255,165,0,0.1);
+}
+
+.payment-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 15px;
+}
+</style>
+
+        <button type="submit" class="submit-btn">Подтвердить заказ</button>
+    </form>
+</div>
+
+<style>
+.order-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+.order-title {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.order-form {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.form-section {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.section-title {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    color: #555;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.form-field {
+    flex: 1;
+    margin-bottom: 8px;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #666;
+}
+
+.form-field input,
+.form-field select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    border-color: #ffa500;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255,165,0,0.1);
+}
+
+.submit-btn {
+    width: 100%;
+    background-color: #ffa500;
+    color: #000;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+    background-color: #ff8c00;
+}
+
+/* Стили для радиокнопок способа оплаты */
+.form-field ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.form-field li {
+    margin-bottom: 8px;
+}
+
+.form-field li label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.form-field input[type="radio"] {
+    width: auto;
+    margin-right: 8px;
+}
+</style>
+{% endblock %}

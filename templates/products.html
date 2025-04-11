@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+/* Основные стили для sticky footer */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Используем viewport height */
+}
+
+main {
+    flex: 1; /* Это заставляет основной контент занимать все доступное пространство */
+}
+
+    footer {
+    margin-top: 50px;
+    }
+</style>
+<section class="products-header">
+    <div class="container">
+        <h1>Наша коллекция обуви</h1>
+        <p>Выберите свою идеальную пару из нашего широкого ассортимента</p>
+    </div>
+</section>
+
+<section class="products-filter">
+    <div class="container">
+        <div class="filter-content">
+            <div class="categories">
+                <a href="{% url 'product_list' %}" class="{% if not category %}active{% endif %}">Все</a>
+                {% for cat in categories %}
+                <a href="{% url 'product_list_by_category' cat.slug %}" class="{% if category.slug == cat.slug %}active{% endif %}">{{ cat.name }}</a>
+                {% endfor %}
+            </div>
+            <form method="get" action="{% url 'product_list' %}" class="search-form">
+                <input type="text" name="q" placeholder="Поиск..." value="{{ request.GET.q }}">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section class="products-list">
+    <div class="container">
+        {% if shoes %}
+        <div class="products-grid">
+            {% for shoe in shoes %}
+            <div class="product-card">
+                <a href="{% url 'product_detail' shoe.id shoe.slug %}">
+                    <div class="product-image">
+                        <img src="{{ shoe.image.url }}" alt="{{ shoe.name }}" loading="lazy">
+                    </div>
+                    <h3>{{ shoe.name }}</h3>
+                    <p class="price">{{ shoe.price }} руб.</p>
+                </a>
+                <a href="{% url 'cart_add' shoe.id %}" class="btn">В корзину</a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-products">
+            <p>Товары не найдены. Попробуйте изменить параметры поиска.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

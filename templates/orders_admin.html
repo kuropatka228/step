@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if user.is_superuser %}
+<section class="orders" style="margin-top: 40px; margin-bottom: 40px;">
+    <div class="container">
+        <h1>Управление заказами</h1>
+
+        {% if orders %}
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-header">
+                    <div class="order-id">Заказ #{{ order.id }}</div>
+                    <div class="order-date">{{ order.created|date:"d.m.Y H:i" }}</div>
+                    <div class="order-status {{ order.status }}">{{ order.get_status_display }}</div>
+                    <div class="order-total">{{ order.get_total_cost }} руб.</div>
+                </div>
+                <div class="order-details">
+                    <div class="order-items">
+                        {% for item in order.items.all %}
+                        <div class="order-item">
+                            <div class="item-name">{{ item.shoe.name }} (x{{ item.quantity }})</div>
+                            <div class="item-price">{{ item.get_cost }} руб.</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="order-info">
+                        <p><strong>Клиент:</strong> {{ order.first_name }} {{ order.last_name }}</p>
+                        <p><strong>Телефон:</strong> {{ order.phone }}</p>
+                        <p><strong>Адрес:</strong> {{ order.city }}, {{ order.address }}</p>
+                    </div>
+                    <div class="order-actions">
+                        <form method="post" action="{% url 'update_order_status' order.id %}" class="status-form">
+                            {% csrf_token %}
+                            <select name="status" class="status-select">
+                                {% for value, name in status_choices %}
+                                <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn small">Обновить</button>
+                        </form>
+                        <a href="{% url 'order_detail' order.id %}" class="btn">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-orders">
+            <p>Нет заказов для отображения.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% else %}
+<section class="access-denied">
+    <div class="container">
+        <h1>Доступ запрещен</h1>
+        <p>У вас нет прав для просмотра этой страницы.</p>
+        <a href="{% url 'home' %}" class="btn primary" style="margin-top: 20px;">На главную</a>
+    </div>
+</section>
+{% endif %}
+
+<style>
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.order-details {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.order-info {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.order-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.status-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-width: 200px;
+}
+
+.order-status {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.order-status.new {
+    background-color: #d4edff;
+    color: #0d6efd;
+}
+
+.order-status.processing {
+    background-color: #fff3cd;
+    color: #ffc107;
+}
+
+.order-status.completed {
+    background-color: #d1fae5;
+    color: #10b981;
+}
+
+.order-status.cancelled {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+.btn.small {
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.access-denied {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.access-denied h1 {
+    color: #dc3545;
+    margin-bottom: 20px;
+}
+</style>
+
+<style>
+/* Основные стили для sticky footer */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Используем viewport height */
+}
+
+main {
+    flex: 1; /* Это заставляет основной контент занимать все доступное пространство */
+}
+</style>
+{% endblock %}

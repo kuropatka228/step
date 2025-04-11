@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+/* Основные стили для sticky footer */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Используем viewport height */
+}
+
+main {
+    flex: 1; /* Это заставляет основной контент занимать все доступное пространство */
+}
+</style>
+<section class="orders" style="margin-top: 40px; margin-bottom: 40px;">
+    <div class="container">
+        {% block orders_header %}{% endblock %}
+        
+        {% if orders %}
+        <div class="orders-list">
+            {% for order in orders %}
+                {% include "shoes/order_card.html" %}
+            {% endfor %}
+        </div>
+        {% else %}
+            {% block no_orders %}{% endblock %}
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
