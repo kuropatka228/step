@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<link rel="stylesheet" href="/static/css/style.css">
 {% if user.is_superuser %}
+
 <section class="orders" style="margin-top: 40px; margin-bottom: 40px;">
     <div class="container">
         <h1>Управление заказами</h1>
